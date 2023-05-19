@@ -13,15 +13,23 @@ resource "aws_security_group" "web-sg" {
   description = "Allow ssh and http inbound traffic"
   vpc_id      = aws_default_vpc.default_vpc.id
 
- dynamic "ingress" {
-    for_each = [22, 80, 443]  # Add your desired ingress port numbers here
-    content {
-      description = "ingress port ${ingress.value}"
-      from_port   = ingress.value
-      to_port     = ingress.value
+  ingress {
+      description = "ingress port "
+      #from_port   = ingress.value
+      from_port   = 8000
+      to_port     = 8100
       protocol    = "tcp"
       cidr_blocks = ["0.0.0.0/0"]
-    }
+    
+  }
+  ingress {
+      description = "ingress port "
+      #from_port   = ingress.value
+      from_port   = 22
+      to_port     = 22
+      protocol    = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+    
   }
   egress {
     from_port   = 0
@@ -80,5 +88,9 @@ resource "aws_instance" "DockerInstance" {
 
 
 output "ssh-command" {
-  value = join ("", ["ssh -i keypair.pem ec2-user@", aws_instance.DockerInstance.public_dns ])
+  value = "ssh -i keypair.pem ec2-user@${aws_instance.DockerInstance.public_dns}"
+}
+
+output "public-ip" {
+  value = "${aws_instance.DockerInstance.public_ip}"
 }
