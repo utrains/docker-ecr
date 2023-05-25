@@ -1,6 +1,6 @@
 # Configure the AWS Provider
 provider "aws" {
-  region = "us-east-1"
+  region = "ca-central-1"
 }
 
 # create default vpc if one does not exit
