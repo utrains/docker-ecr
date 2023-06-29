@@ -84,6 +84,9 @@ resource "aws_instance" "DockerInstance" {
   tags = {
     Name = "docker instance"
   }
+  provisioner "local-exec" {
+    command = "sleep 300"
+  }
 }
 
 
