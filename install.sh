@@ -5,7 +5,7 @@ sudo yum install docker -y
 sudo usermod -aG docker ec2-user
 sudo service docker start
 sudo systemctl enable docker 
-
+echo "PS1='\e[1;32m\u@\h \w$ \e[m'" >> /home/ec2-user/.bash_profile
 #install git
 sudo yum install git -y
 # install wget
