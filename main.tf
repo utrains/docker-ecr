@@ -95,5 +95,5 @@ output "ssh-command" {
 }
 
 output "public-ip" {
-  value = "${aws_instance.DockerInstance.public_ip}"
+  value = aws_instance.DockerInstance.public_ip
 }
