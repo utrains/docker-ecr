@@ -25,6 +25,15 @@ resource "aws_security_group" "web-sg" {
   ingress {
       description = "ingress port "
       #from_port   = ingress.value
+      from_port   = 80
+      to_port     = 80
+      protocol    = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+    
+  }
+  ingress {
+      description = "ingress port "
+      #from_port   = ingress.value
       from_port   = 22
       to_port     = 22
       protocol    = "tcp"
@@ -80,7 +89,11 @@ resource "aws_instance" "DockerInstance" {
   vpc_security_group_ids = [aws_security_group.web-sg.id]
   key_name               = aws_key_pair.ec2_key.key_name
   user_data              = file("install.sh")
- 
+  root_block_device {
+    volume_size = 30  
+    volume_type = "gp2"  
+  }
+
   tags = {
     Name = "docker instance"
   }
