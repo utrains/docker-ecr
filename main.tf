@@ -32,7 +32,7 @@ resource "aws_security_group" "web-sg" {
     
   }
   ingress {
-      description = "ingress port "
+      description = "ingress-port "
       #from_port   = ingress.value
       from_port   = 22
       to_port     = 22
@@ -96,7 +96,7 @@ resource "aws_instance" "DockerInstance" {
   }
 
   tags = {
-    Name = "docker instance"
+    Name = "docker-instance"
   }
  
 }
