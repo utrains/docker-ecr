@@ -60,13 +60,14 @@ resource "tls_private_key" "ec2_key" {
 }
 # Create the Key Pair
 resource "aws_key_pair" "ec2_key" {
-  key_name   = "privatekeypair"  
+  key_name   = "docker-keypair"  
   public_key = tls_private_key.ec2_key.public_key_openssh
 }
 # Save file
 resource "local_file" "ssh_key" {
-  filename = "keypair.pem"
+  filename = "${aws_key_pair.ec2_key.key_name}.pem"
   content  = tls_private_key.ec2_key.private_key_pem
+  file_permission = "400"
 }
 
 #data for amazon linux
@@ -102,7 +103,7 @@ resource "aws_instance" "DockerInstance" {
 
 
 output "ssh-command" {
-  value = "ssh -i keypair.pem ec2-user@${aws_instance.DockerInstance.public_dns}"
+  value = "ssh -i ${aws_key_pair.ec2_key.key_name}.pem ec2-user@${aws_instance.DockerInstance.public_dns}"
 }
 
 output "public-ip" {
