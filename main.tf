@@ -86,7 +86,7 @@ data "aws_ami" "amazon-2" {
 
 resource "aws_instance" "DockerInstance" {
   ami                    = data.aws_ami.amazon-2.id
-  instance_type          = "t2.micro"
+  instance_type          = "t2.medium"
   vpc_security_group_ids = [aws_security_group.web-sg.id]
   key_name               = aws_key_pair.ec2_key.key_name
   user_data              = file("install.sh")
