@@ -2,7 +2,7 @@
 **/.terraform/*
 **/serge/*
 .terraform*
-
+docker-keypair.pem
 
 # .tfstate files
 *.tfstate

@@ -98,6 +98,7 @@ resource "aws_instance" "DockerInstance" {
   tags = {
     Name = "docker-instance"
   }
+ depends_on = [ aws_ecr_repository.ecr1 ]
  
 }
 
