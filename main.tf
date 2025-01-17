@@ -102,11 +102,3 @@ resource "aws_instance" "DockerInstance" {
  depends_on = [ aws_ecr_repository.ecr1 ]
  
 }
-
-
-resource "null_resource" "n1" {
-  connection {
-    
-  }
-  depends_on = [ aws_instance.DockerInstance ]
-}
