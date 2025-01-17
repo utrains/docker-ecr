@@ -1,6 +1,6 @@
 # Configure the AWS Provider
 provider "aws" {
-  region = "us-east-1"
+  region = var.region
 }
 
 # create default vpc if one does not exit
@@ -89,7 +89,7 @@ resource "aws_instance" "DockerInstance" {
   instance_type          = "t2.medium"
   vpc_security_group_ids = [aws_security_group.web-sg.id]
   key_name               = aws_key_pair.ec2_key.key_name
-  user_data              = file("install.sh")
+  #user_data              = file("install.sh")
   iam_instance_profile   = aws_iam_instance_profile.docker_ecr_profile.name
   root_block_device {
     volume_size = 30  
@@ -99,6 +99,38 @@ resource "aws_instance" "DockerInstance" {
   tags = {
     Name = "docker-instance"
   }
+  provisioner "file" {
+    source      = "${path.module}/installation/"
+    destination = "/home/ec2-user/"
+
+    connection {
+      type = "ssh"
+      user = "ec2-user"
+      private_key = file(local_file.ssh_key.filename)
+      host        = self.public_ip
+      timeout     = "1m"
+    }
+  }
  depends_on = [ aws_ecr_repository.ecr1 ]
  
+}
+resource "null_resource" "n1" {
+  // connect to docker server , build and push image to ecr
+  connection {
+    host = aws_instance.DockerInstance.public_ip
+    type = "ssh"
+    port = 22
+    user = "ec2-user"
+    private_key = file(local_file.ssh_key.filename)
+  }
+
+  provisioner "remote-exec" {
+    inline = [ 
+      "ls",
+      "sudo yum install dos2unix -y",
+      "dos2unix /home/ec2-user/install.sh",
+      "sh /home/ec2-user/install.sh ${var.region}  ${aws_ecr_repository.ecr1.repository_url}" ,
+     ]
+  }
+ depends_on = [ aws_instance.DockerInstance ] 
 }

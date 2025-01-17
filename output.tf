@@ -5,3 +5,6 @@ output "ssh-command" {
 output "public-ip" {
   value = aws_instance.DockerInstance.public_ip
 }
+output "ecr_url" {
+  value = aws_ecr_repository.ecr1.repository_url
+}
